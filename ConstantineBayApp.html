@@ -165,6 +165,7 @@
             font-weight: 500;
         }
         
+        @media (max-width: 768px) {
         .surf-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -174,32 +175,32 @@
         
         .surf-forecast-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
         }
         
         .surf-forecast-item {
             text-align: center;
-            padding: 12px;
+            padding: 8px;
             background: rgba(8, 145, 178, 0.1);
             border-radius: 10px;
         }
         
         .surf-forecast-time {
             font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
             color: #0891b2;
         }
         
         .surf-forecast-wave {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             margin-bottom: 4px;
         }
         
         .surf-forecast-condition {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #666;
         }
         
