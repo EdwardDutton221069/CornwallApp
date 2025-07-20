@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constantine Bay Weather, Surf & Padstow Tides</title>
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ29uc3RhbnRpbmUgQmF5IFdlYXRoZXIsIFN1cmYgJiBQYWRzdG93IFRpZGVzIiwic2hvcnRfbmFtZSI6IldlYXRoZXIsIFN1cmYgJiBUaWRlcyIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImJhY2tncm91bmRfY29sb3IiOiIjZmZmZmZmIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5qUWlJR2hsYVdkb2REMGlOalFpSUhacFpYZENiM2c5SWpBZ01DQTJOQ0EyTkNJZ1ptbHNiRDBpYm05dVpTSStQSEpsWTNRZ2VEMGlPQ0lnZVQwaU9DSWdkMmxrZEdnOUlqUTRJaUJvWldsbmFIUTlJalE0SWlCbWFXeHNQU0pqZFhKeVpXNTBRMjlzYjNJaUlHWnBiR3d0Y0hKcGJXRnllVDBpSTJZeU1qUXhNQ0lnY25nOUlqUWlMejQ4TDNOMlp6ND0iLCJzaXplcyI6IjY0eDY0IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card h2 {
+            color: #2563eb;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .weather-current {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .weather-icon {
+            font-size: 3rem;
+        }
+        
+        .weather-info {
+            flex: 1;
+        }
+        
+        .temperature {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .feels-like {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        
+        .forecast-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 10px;
+        }
+        
+        .forecast-day {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .forecast-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .forecast-temp {
+            font-size: 0.9rem;
+            color: #2563eb;
+        }
+        
+        .surf-current {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .surf-icon {
+            font-size: 3rem;
+        }
+        
+        .surf-info {
+            flex: 1;
+        }
+        
+        .wave-height {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0891b2;
+        }
+        
+        .surf-condition {
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .surf-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .surf-forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        
+        .surf-forecast-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(8, 145, 178, 0.1);
+            border-radius: 10px;
+        }
+        
+        .surf-forecast-time {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #0891b2;
+        }
+        
+        .surf-forecast-wave {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .surf-forecast-condition {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .condition-poor { color: #dc2626; }
+        .condition-fair { color: #f59e0b; }
+        .condition-good { color: #16a34a; }
+        .condition-excellent { color: #059669; }
+        
+        .tide-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 10px;
+        }
+        
+        .tide-time {
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        .tide-height {
+            color: #666;
+        }
+        
+        .tide-type {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .high-tide {
+            background: rgba(34, 197, 94, 0.2);
+            color: #059669;
+        }
+        
+        .low-tide {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #dc2626;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .refresh-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .setup-instructions {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .setup-instructions h3 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+        
+        .setup-instructions p {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .setup-instructions code {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .weather-current, .surf-current {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .weather-details, .surf-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏄‍♂️ Constantine Bay</h1>
+            <p>Weather, Surf & Padstow Tides</p>
+        </div>
+        
+        <div class="card">
+            <h2>🌤️ Current Weather</h2>
+            <div id="weather-content">
+                <div class="loading">Loading weather data...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🏄‍♂️ Surf Forecast</h2>
+            <div id="surf-content">
+                <div class="loading">Loading surf data...</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📈 7-Day Forecast</h2>
+            <div id="forecast-content">
+                <div class="loading">Loading forecast...</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🌊 Padstow Tides</h2>
+            <div id="tides-content">
+                <div class="loading">Loading tide data...</div>
+            </div>
+        </div>
+        
+        <button class="refresh-btn" onclick="loadAllData()">
+            🔄 Refresh Data
+        </button>
+    </div>
+
+    <script>
+        // API Configuration - Add your API keys here
+        const API_KEYS = {
+            weather: '6913130a5d1fa725440f39387628b832', // OpenWeatherMap API key
+            tides: 'ffa8e20c-63cc-11f0-bed1-0242ac130006-ffa8e270-63cc-11f0-bed1-0242ac130006',    // StormGlass API key
+            surf: 'ffa8e20c-63cc-11f0-bed1-0242ac130006-ffa8e270-63cc-11f0-bed1-0242ac130006'      // StormGlass API key (same as tides)
+        };
+        
+        // Location coordinates
+        const LOCATIONS = {
+            constantineBay: { lat: 50.5361, lon: -4.9981 },
+            padstow: { lat: 50.5408, lon: -4.9378 }
+        };
+        
+        // Weather icons mapping
+        const weatherIcons = {
+            '01d': '☀️', '01n': '🌙', '02d': '⛅', '02n': '☁️',
+            '03d': '☁️', '03n': '☁️', '04d': '☁️', '04n': '☁️',
+            '09d': '🌧️', '09n': '🌧️', '10d': '🌦️', '10n': '🌧️',
+            '11d': '⛈️', '11n': '⛈️', '13d': '🌨️', '13n': '🌨️',
+            '50d': '🌫️', '50n': '🌫️'
+        };
+
+        // Surf condition rating
+        function getSurfCondition(waveHeight, windSpeed, windDirection, waveDirection) {
+            const waveDiff = Math.abs(windDirection - waveDirection);
+            const isOffshore = waveDiff > 90 && waveDiff < 270;
+            
+            if (waveHeight < 0.5) return { condition: 'Flat', rating: 'poor', emoji: '😴' };
+            if (waveHeight > 4) return { condition: 'Too Big', rating: 'poor', emoji: '⚠️' };
+            
+            if (isOffshore && windSpeed < 20 && waveHeight >= 1 && waveHeight <= 3) {
+                return { condition: 'Excellent', rating: 'excellent', emoji: '🤩' };
+            } else if (isOffshore && waveHeight >= 0.8) {
+                return { condition: 'Good', rating: 'good', emoji: '😊' };
+            } else if (waveHeight >= 0.8) {
+                return { condition: 'Fair', rating: 'fair', emoji: '😐' };
+            } else {
+                return { condition: 'Poor', rating: 'poor', emoji: '😞' };
+            }
+        }
+        
+        // Load demo data if no API keys
+        function loadDemoData() {
+            document.getElementById('weather-content').innerHTML = `
+                <div class="weather-current">
+                    <div class="weather-icon">🌤️</div>
+                    <div class="weather-info">
+                        <div class="temperature">18°C</div>
+                        <div class="description">Partly cloudy</div>
+                        <div class="feels-like">Feels like 20°C</div>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <div class="detail-item">💨 Wind: 12 km/h</div>
+                    <div class="detail-item">💧 Humidity: 65%</div>
+                    <div class="detail-item">👁️ Visibility: 10 km</div>
+                    <div class="detail-item">🌊 UV Index: 5</div>
+                </div>
+            `;
+
+            document.getElementById('surf-content').innerHTML = `
+                <div class="surf-current">
+                    <div class="surf-icon">🌊</div>
+                    <div class="surf-info">
+                        <div class="wave-height">1.2-1.8m</div>
+                        <div class="surf-condition condition-good">Good 😊</div>
+                        <div class="feels-like">8 second period</div>
+                    </div>
+                </div>
+                <div class="surf-details">
+                    <div class="detail-item">🧭 Swell: SW</div>
+                    <div class="detail-item">💨 Wind: NE 15km/h</div>
+                    <div class="detail-item">⏱️ Period: 8s</div>
+                    <div class="detail-item">🌊 Next: 1.5m @ 14:00</div>
+                </div>
+                <div class="surf-forecast-grid">
+                    <div class="surf-forecast-item">
+                        <div class="surf-forecast-time">Now</div>
+                        <div class="surf-forecast-wave">1.2m</div>
+                        <div class="surf-forecast-condition condition-good">Good</div>
+                    </div>
+                    <div class="surf-forecast-item">
+                        <div class="surf-forecast-time">12:00</div>
+                        <div class="surf-forecast-wave">1.4m</div>
+                        <div class="surf-forecast-condition condition-good">Good</div>
+                    </div>
+                    <div class="surf-forecast-item">
+                        <div class="surf-forecast-time">15:00</div>
+                        <div class="surf-forecast-wave">1.8m</div>
+                        <div class="surf-forecast-condition condition-excellent">Excellent</div>
+                    </div>
+                    <div class="surf-forecast-item">
+                        <div class="surf-forecast-time">18:00</div>
+                        <div class="surf-forecast-wave">1.6m</div>
+                        <div class="surf-forecast-condition condition-good">Good</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('forecast-content').innerHTML = `
+                <div class="forecast-grid">
+                    <div class="forecast-item">
+                        <div class="forecast-day">Today</div>
+                        <div class="forecast-icon">🌤️</div>
+                        <div class="forecast-temp">18°/12°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Sat</div>
+                        <div class="forecast-icon">☀️</div>
+                        <div class="forecast-temp">22°/14°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Sun</div>
+                        <div class="forecast-icon">🌦️</div>
+                        <div class="forecast-temp">19°/13°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Mon</div>
+                        <div class="forecast-icon">☁️</div>
+                        <div class="forecast-temp">17°/11°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Tue</div>
+                        <div class="forecast-icon">🌧️</div>
+                        <div class="forecast-temp">16°/10°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Wed</div>
+                        <div class="forecast-icon">⛅</div>
+                        <div class="forecast-temp">20°/12°</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-day">Thu</div>
+                        <div class="forecast-icon">☀️</div>
+                        <div class="forecast-temp">23°/15°</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tides-content').innerHTML = `
+                <div class="tide-item">
+                    <div>
+                        <div class="tide-time">06:24</div>
+                        <div class="tide-height">4.2m</div>
+                    </div>
+                    <div class="tide-type high-tide">High Tide</div>
+                </div>
+                <div class="tide-item">
+                    <div>
+                        <div class="tide-time">12:48</div>
+                        <div class="tide-height">1.8m</div>
+                    </div>
+                    <div class="tide-type low-tide">Low Tide</div>
+                </div>
+                <div class="tide-item">
+                    <div>
+                        <div class="tide-time">18:52</div>
+                        <div class="tide-height">4.1m</div>
+                    </div>
+                    <div class="tide-type high-tide">High Tide</div>
+                </div>
+                <div class="tide-item">
+                    <div>
+                        <div class="tide-time">01:15</div>
+                        <div class="tide-height">1.9m</div>
+                    </div>
+                    <div class="tide-type low-tide">Low Tide</div>
+                </div>
+            `;
+        }
+        
+        // Load weather data
+        async function loadWeatherData() {
+            if (!API_KEYS.weather) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${LOCATIONS.constantineBay.lat}&lon=${LOCATIONS.constantineBay.lon}&appid=${API_KEYS.weather}&units=metric`
+                );
+                const data = await response.json();
+                
+                const icon = weatherIcons[data.weather[0].icon] || '🌤️';
+                
+                document.getElementById('weather-content').innerHTML = `
+                    <div class="weather-current">
+                        <div class="weather-icon">${icon}</div>
+                        <div class="weather-info">
+                            <div class="temperature">${Math.round(data.main.temp)}°C</div>
+                            <div class="description">${data.weather[0].description}</div>
+                            <div class="feels-like">Feels like ${Math.round(data.main.feels_like)}°C</div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item">💨 Wind: ${Math.round(data.wind.speed * 3.6)} km/h</div>
+                        <div class="detail-item">💧 Humidity: ${data.main.humidity}%</div>
+                        <div class="detail-item">👁️ Visibility: ${Math.round(data.visibility / 1000)} km</div>
+                        <div class="detail-item">🌊 Pressure: ${data.main.pressure} mb</div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('weather-content').innerHTML = `
+                    <div class="error">Error loading weather data</div>
+                `;
+            }
+        }
+
+        // Load surf data
+        async function loadSurfData() {
+            if (!API_KEYS.surf) {
+                return;
+            }
+            
+            try {
+                const now = new Date();
+                const end = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
+                
+                const response = await fetch(
+                    `https://api.stormglass.io/v2/weather/point?lat=${LOCATIONS.constantineBay.lat}&lng=${LOCATIONS.constantineBay.lon}&params=waveHeight,wavePeriod,waveDirection,windSpeed,windDirection&start=${now.toISOString()}&end=${end.toISOString()}`,
+                    { headers: { 'Authorization': API_KEYS.surf } }
+                );
+                const data = await response.json();
+                
+                if (data.hours && data.hours.length > 0) {
+                    const current = data.hours[0];
+                    const waveHeight = current.waveHeight?.noaa || current.waveHeight?.sg || 1.2;
+                    const wavePeriod = current.wavePeriod?.noaa || current.wavePeriod?.sg || 8;
+                    const waveDirection = current.waveDirection?.noaa || current.waveDirection?.sg || 225;
+                    const windSpeed = current.windSpeed?.noaa || current.windSpeed?.sg || 15;
+                    const windDirection = current.windDirection?.noaa || current.windDirection?.sg || 45;
+                    
+                    const condition = getSurfCondition(waveHeight, windSpeed * 3.6, windDirection, waveDirection);
+                    const directionNames = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+                    const swellDir = directionNames[Math.round(waveDirection / 22.5) % 16];
+                    const windDir = directionNames[Math.round(windDirection / 22.5) % 16];
+                    
+                    // Current surf display
+                    document.getElementById('surf-content').innerHTML = `
+                        <div class="surf-current">
+                            <div class="surf-icon">${condition.emoji}</div>
+                            <div class="surf-info">
+                                <div class="wave-height">${waveHeight.toFixed(1)}m</div>
+                                <div class="surf-condition condition-${condition.rating}">${condition.condition}</div>
+                                <div class="feels-like">${wavePeriod.toFixed(0)}s period</div>
+                            </div>
+                        </div>
+                        <div class="surf-details">
+                            <div class="detail-item">🧭 Swell: ${swellDir}</div>
+                            <div class="detail-item">💨 Wind: ${windDir} ${Math.round(windSpeed * 3.6)}km/h</div>
+                            <div class="detail-item">⏱️ Period: ${wavePeriod.toFixed(0)}s</div>
+                            <div class="detail-item">📏 Wave: ${waveHeight.toFixed(1)}m</div>
+                        </div>
+                        <div class="surf-forecast-grid">
+                            ${data.hours.slice(0, 8).filter((_, i) => i % 2 === 0).map(hour => {
+                                const time = new Date(hour.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                                const h = hour.waveHeight?.noaa || hour.waveHeight?.sg || 1.0;
+                                const ws = hour.windSpeed?.noaa || hour.windSpeed?.sg || 10;
+                                const wd = hour.windDirection?.noaa || hour.windDirection?.sg || 180;
+                                const waveD = hour.waveDirection?.noaa || hour.waveDirection?.sg || 225;
+                                const cond = getSurfCondition(h, ws * 3.6, wd, waveD);
+                                
+                                return `
+                                    <div class="surf-forecast-item">
+                                        <div class="surf-forecast-time">${time}</div>
+                                        <div class="surf-forecast-wave">${h.toFixed(1)}m</div>
+                                        <div class="surf-forecast-condition condition-${cond.rating}">${cond.condition}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('surf-content').innerHTML = `
+                    <div class="error">Error loading surf data</div>
+                `;
+            }
+        }
+        
+        // Load forecast data
+        async function loadForecastData() {
+            if (!API_KEYS.weather) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?lat=${LOCATIONS.constantineBay.lat}&lon=${LOCATIONS.constantineBay.lon}&appid=${API_KEYS.weather}&units=metric`
+                );
+                const data = await response.json();
+                
+                const dailyData = {};
+                data.list.forEach(item => {
+                    const date = new Date(item.dt * 1000).toDateString();
+                    if (!dailyData[date]) {
+                        dailyData[date] = {
+                            temps: [],
+                            icon: item.weather[0].icon,
+                            date: new Date(item.dt * 1000)
+                        };
+                    }
+                    dailyData[date].temps.push(item.main.temp);
+                });
+                
+                const forecastHTML = Object.values(dailyData).slice(0, 7).map(day => {
+                    const minTemp = Math.round(Math.min(...day.temps));
+                    const maxTemp = Math.round(Math.max(...day.temps));
+                    const icon = weatherIcons[day.icon] || '🌤️';
+                    const dayName = day.date.toLocaleDateString('en-GB', { weekday: 'short' });
+                    
+                    return `
+                        <div class="forecast-item">
+                            <div class="forecast-day">${dayName}</div>
+                            <div class="forecast-icon">${icon}</div>
+                            <div class="forecast-temp">${maxTemp}°/${minTemp}°</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('forecast-content').innerHTML = `
+                    <div class="forecast-grid">${forecastHTML}</div>
+                `;
+            } catch (error) {
+                document.getElementById('forecast-content').innerHTML = `
+                    <div class="error">Error loading forecast data</div>
+                `;
+            }
+        }
+        
+        // Load tide data
+        async function loadTideData() {
+            if (!API_KEYS.tides) {
+                return;
+            }
+            
+            try {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                const response = await fetch(
+                    `https://api.stormglass.io/v2/tide/extremes/point?lat=${LOCATIONS.padstow.lat}&lng=${LOCATIONS.padstow.lon}&start=${today.toISOString()}&end=${tomorrow.toISOString()}`,
+                    { headers: { 'Authorization': API_KEYS.tides } }
+                );
+                const data = await response.json();
+                
+                const tidesHTML = data.data.map(tide => {
+                    const time = new Date(tide.time).toLocaleTimeString('en-GB', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    const height = tide.height.toFixed(1);
+                    const type = tide.type === 'high' ? 'High Tide' : 'Low Tide';
+                    const typeClass = tide.type === 'high' ? 'high-tide' : 'low-tide';
+                    
+                    return `
+                        <div class="tide-item">
+                            <div>
+                                <div class="tide-time">${time}</div>
+                                <div class="tide-height">${height}m</div>
+                            </div>
+                            <div class="tide-type ${typeClass}">${type}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('tides-content').innerHTML = tidesHTML;
+            } catch (error) {
+                document.getElementById('tides-content').innerHTML = `
+                    <div class="error">Error loading tide data</div>
+                `;
+            }
+        }
+        
+        // Load all data
+        async function loadAllData() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = '🔄 Refreshing...';
+            
+            if (!API_KEYS.weather && !API_KEYS.tides && !API_KEYS.surf) {
+                loadDemoData();
+            } else {
+                await Promise.all([
+                    loadWeatherData(),
+                    loadSurfData(),
+                    loadForecastData(),
+                    loadTideData()
+                ]);
+            }
+            
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '🔄 Refresh Data';
+        }
+        
+        // Service worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript,console.log("SW registered");');
+            });
+        }
+        
+        // Initialize app
+        loadAllData();
+    </script>
+</body>
+</html>
