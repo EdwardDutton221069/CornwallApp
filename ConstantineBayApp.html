@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constantine Bay Weather, Surf & Padstow Tides</title>
     <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="Real-time weather, surf conditions and tides for Constantine Bay and Padstow">
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ29uc3RhbnRpbmUgQmF5IFdlYXRoZXIsIFN1cmYgJiBQYWRzdG93IFRpZGVzIiwic2hvcnRfbmFtZSI6IldlYXRoZXIsIFN1cmYgJiBUaWRlcyIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImJhY2tncm91bmRfY29sb3IiOiIjZmZmZmZmIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5qUWlJR2hsYVdkb2REMGlOalFpSUhacFpYZENiM2c5SWpBZ01DQTJOQ0EyTkNJZ1ptbHNiRDBpYm05dVpTSStQSEpsWTNRZ2VEMGlPQ0lnZVQwaU9DSWdkMmxrZEdnOUlqUTRJaUJvWldsbmFIUTlJalE0SWlCbWFXeHNQU0pqZFhKeVpXNTBRMjlzYjNJaUlHWnBiR3d0Y0hKcGJXRnllVDBpSTJZeU1qUXhNQ0lnY25nOUlqUWlMejQ4TDNOMlp6ND0iLCJzaXplcyI6IjY0eDY0IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
     <style>
         * {
@@ -14,200 +16,240 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             overflow-x: hidden;
+            line-height: 1.5;
         }
         
         .container {
             max-width: 400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 16px;
             min-height: 100vh;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             color: white;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
         .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.75rem;
+            margin-bottom: 4px;
+            font-weight: 700;
         }
         
         .header p {
             opacity: 0.9;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
         
         .card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
         .card h2 {
             color: #2563eb;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-size: 1.125rem;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 600;
         }
         
-       .weather-current {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 10px 20px;
-    align-items: center;
-    margin-bottom: 10px;
-}
+        .weather-current {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 12px 20px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-.weather-icon {
-    grid-row: 1 / -1; /* Spans all rows */
-    font-size: 4rem;
-}
+        .weather-icon {
+            grid-row: 1 / -1;
+            font-size: 4rem;
+            line-height: 1;
+        }
 
-.temperature {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #2563eb;
-}
+        .temperature {
+            grid-column: 2;
+            grid-row: 1;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            line-height: 1;
+        }
 
-.description {
-    grid-column: 2;
-    grid-row: 2;
-    color: #666;
-}
+        .description {
+            grid-column: 2;
+            grid-row: 2;
+            color: #666;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
 
-.feels-like {
-    grid-column: 2;
-    grid-row: 3;
-    font-size: 0.9rem;
-    color: #888;
-}
+        .feels-like {
+            grid-column: 2;
+            grid-row: 3;
+            font-size: 0.875rem;
+            color: #888;
+        }
         
         .weather-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 12px;
+            margin-bottom: 16px;
         }
         
         .detail-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-size: 0.8rem;
+            padding: 8px;
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 8px;
+            font-weight: 500;
         }
 
-.hourly-forecast {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
+        .hourly-forecast {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
 
-.hourly-forecast-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #333;
-}
-       .hourly-forecast-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
+        .hourly-forecast-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #374151;
+        }
 
-.hourly-item {
-    text-align: center;
-    padding: 8px 4px;
-    background: rgba(37, 99, 235, 0.08);
-    border-radius: 8px;
-    font-size: 0.8rem;
-}
+        .hourly-forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
 
-.hourly-time {
-    font-size: 0.7rem;
-    color: #666;
-    margin-bottom: 4px;
-    font-weight: 500;
-}
+        .hourly-item {
+            text-align: center;
+            padding: 12px 8px;
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
 
-.hourly-icon {
-    width: 20px;
-    height: 20px;
-    margin: 2px auto 4px;
-    display: block;
-}
+        .hourly-item:hover {
+            background: rgba(37, 99, 235, 0.12);
+            transform: scale(1.02);
+        }
 
-.hourly-temp {
-    font-weight: bold;
-    font-size: 0.75rem;
-    color: #2563eb;
-}
+        .hourly-time {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
 
-/* Mobile responsive */
-@media (max-width: 480px) {
-    .hourly-forecast-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-    }
-    
-    .hourly-item {
-        padding: 6px 3px;
-    }
-}
+        .hourly-icon {
+            width: 24px;
+            height: 24px;
+            margin: 4px auto 6px;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .hourly-temp {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #2563eb;
+        }
+
+        @media (max-width: 480px) {
+            .hourly-forecast-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .hourly-item {
+                padding: 10px 6px;
+            }
+            
+            .container {
+                padding: 12px;
+            }
+        }
+        
         .forecast-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
         }
         
         .forecast-item {
             text-align: center;
-            padding: 8px;
+            padding: 12px 8px;
             background: rgba(37, 99, 235, 0.1);
-            border-radius: 8px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .forecast-item:hover {
+            background: rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
         }
         
         .forecast-day {
-            font-weight: bold;
-            margin-bottom: 4px;
+            font-weight: 600;
+            margin-bottom: 6px;
             font-size: 0.8rem;
+            color: #374151;
         }
         
         .forecast-icon {
             font-size: 1.5rem;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1;
         }
         
         .forecast-temp {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: #2563eb;
+            font-weight: 600;
         }
 
         .surf-current {
             display: flex;
             align-items: center;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         
         .surf-icon {
             font-size: 3rem;
+            line-height: 1;
         }
         
         .surf-info {
@@ -216,53 +258,61 @@
         
         .wave-height {
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
             color: #0891b2;
+            line-height: 1;
         }
         
         .surf-condition {
             color: #666;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 4px;
+            font-weight: 600;
         }
         
-        @media (max-width: 768px) {
         .surf-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 16px;
         }
         
         .surf-forecast-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
             gap: 8px;
         }
         
         .surf-forecast-item {
             text-align: center;
-            padding: 8px;
+            padding: 12px 8px;
             background: rgba(8, 145, 178, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .surf-forecast-item:hover {
+            background: rgba(8, 145, 178, 0.15);
+            transform: translateY(-2px);
         }
         
         .surf-forecast-time {
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #0891b2;
         }
         
         .surf-forecast-wave {
-            font-size: 1rem;
-            font-weight: bold;
+            font-size: 0.95rem;
+            font-weight: 700;
             margin-bottom: 4px;
+            color: #374151;
         }
         
         .surf-forecast-condition {
             font-size: 0.7rem;
             color: #666;
+            font-weight: 500;
         }
         
         .condition-poor { color: #dc2626; }
@@ -274,26 +324,37 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(37, 99, 235, 0.1);
-            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .tide-item:hover {
+            background: rgba(37, 99, 235, 0.12);
+            transform: translateX(4px);
         }
         
         .tide-time {
-            font-weight: bold;
+            font-weight: 700;
             color: #2563eb;
+            font-size: 1rem;
         }
         
         .tide-height {
-            color: #666;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
         
         .tide-type {
-            padding: 4px 8px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .high-tide {
@@ -309,43 +370,56 @@
         .loading {
             text-align: center;
             padding: 20px;
-            color: #666;
+            color: #6b7280;
+            font-weight: 500;
         }
         
         .error {
             text-align: center;
-            padding: 20px;
+            padding: 16px;
             color: #dc2626;
             background: rgba(239, 68, 68, 0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
         
         .refresh-btn {
-            background: #2563eb;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 14px 24px;
             border-radius: 25px;
             font-size: 0.9rem;
             cursor: pointer;
             width: 100%;
             margin-top: 20px;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         
-        .refresh-btn:hover {
-            background: #1d4ed8;
+        .refresh-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+        
+        .refresh-btn:active:not(:disabled) {
+            transform: translateY(0);
         }
         
         .refresh-btn:disabled {
             background: #9ca3af;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .setup-instructions {
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             border-left: 4px solid #f59e0b;
@@ -354,32 +428,73 @@
         .setup-instructions h3 {
             color: #f59e0b;
             margin-bottom: 10px;
+            font-weight: 600;
         }
         
         .setup-instructions p {
             margin-bottom: 10px;
-            line-height: 1.4;
+            line-height: 1.6;
         }
         
         .setup-instructions code {
             background: rgba(0, 0, 0, 0.1);
             padding: 2px 6px;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+            font-size: 0.85em;
         }
         
+        .last-updated {
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 16px;
+            font-weight: 500;
+        }
+        
+        /* Loading animation */
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50%;
+            border-top-color: #2563eb;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Improved responsive design */
         @media (max-width: 480px) {
-            .container {
-                padding: 12px;
+            .weather-current {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 8px;
             }
             
-            .weather-current, .surf-current {
+            .weather-icon {
+                grid-row: 1;
+                grid-column: 1;
+            }
+            
+            .temperature, .description, .feels-like {
+                grid-column: 1;
+            }
+            
+            .surf-current {
                 flex-direction: column;
                 text-align: center;
+                gap: 12px;
             }
             
             .weather-details, .surf-details {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
+                gap: 8px;
             }
         }
     </style>
@@ -394,43 +509,43 @@
         <div class="card">
             <h2>🌤️ Current Weather</h2>
             <div id="weather-content">
-                <div class="loading">Loading weather data...</div>
+                <div class="loading">Loading weather data</div>
             </div>
-    
-    <!-- Updated hourly forecast with grid layout -->
+            
             <div class="hourly-forecast">
                 <h3 class="hourly-forecast-title">Next 12 Hours</h3>
                 <div class="hourly-forecast-grid">
-            <!-- Cards will be populated by JavaScript -->
+                    <!-- Cards will be populated by JavaScript -->
                 </div>
+            </div>
         </div>
-    </div>
         
         <div class="card">
             <h2>📈 7-Day Forecast</h2>
             <div id="forecast-content">
-                <div class="loading">Loading forecast...</div>
+                <div class="loading">Loading forecast</div>
             </div>
         </div>
         
-         <div class="card">
+        <div class="card">
             <h2>🏄‍♂️ Surf Forecast</h2>
             <div id="surf-content">
-                <div class="loading">Loading surf data...</div>
+                <div class="loading">Loading surf data</div>
             </div>
         </div>
-                <div class="card">
+        
+        <div class="card">
             <h2>🌊 Padstow Tides</h2>
             <div id="tides-content">
-                <div class="loading">Loading tide data...</div>
+                <div class="loading">Loading tide data</div>
             </div>
         </div>
-    </div>
-</body>
         
         <button class="refresh-btn" onclick="loadAllData()">
             🔄 Refresh Data
         </button>
+        
+        <div class="last-updated" id="last-updated"></div>
     </div>
 
     <script>
@@ -475,22 +590,55 @@
             }
         }
         
+        // Update last updated time
+        function updateLastUpdatedTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.getElementById('last-updated').textContent = `Last updated: ${timeString}`;
+        }
+        
         // Load demo data if no API keys
         function loadDemoData() {
             document.getElementById('weather-content').innerHTML = `
                 <div class="weather-current">
                     <div class="weather-icon">🌤️</div>
-                    <div class="weather-info">
-                        <div class="temperature">18°C</div>
-                        <div class="description">Partly cloudy</div>
-                        <div class="feels-like">Feels like 20°C</div>
-                    </div>
+                    <div class="temperature">18°C</div>
+                    <div class="description">Partly cloudy</div>
+                    <div class="feels-like">Feels like 20°C</div>
                 </div>
                 <div class="weather-details">
                     <div class="detail-item">💨 Wind: 12 km/h</div>
                     <div class="detail-item">💧 Humidity: 65%</div>
                     <div class="detail-item">👁️ Visibility: 10 km</div>
                     <div class="detail-item">🌊 UV Index: 5</div>
+                </div>
+            `;
+
+            // Demo hourly forecast
+            const hourlyContainer = document.querySelector('.hourly-forecast-grid');
+            hourlyContainer.innerHTML = `
+                <div class="hourly-item">
+                    <div class="hourly-time">Now</div>
+                    <div class="hourly-icon">🌤️</div>
+                    <div class="hourly-temp">18°</div>
+                </div>
+                <div class="hourly-item">
+                    <div class="hourly-time">3PM</div>
+                    <div class="hourly-icon">☀️</div>
+                    <div class="hourly-temp">20°</div>
+                </div>
+                <div class="hourly-item">
+                    <div class="hourly-time">6PM</div>
+                    <div class="hourly-icon">⛅</div>
+                    <div class="hourly-temp">19°</div>
+                </div>
+                <div class="hourly-item">
+                    <div class="hourly-time">9PM</div>
+                    <div class="hourly-icon">🌙</div>
+                    <div class="hourly-temp">16°</div>
                 </div>
             `;
 
