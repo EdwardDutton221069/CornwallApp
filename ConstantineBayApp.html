@@ -933,13 +933,13 @@ function displayHourlyForecast(hourlyData) {
             hour12: true
         });
         
-        // Get weather icon
+        // Get weather emoji icon (same as 7-day forecast)
         const iconCode = period.weather[0].icon;
-        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+        const weatherEmoji = weatherIcons[iconCode] || '🌤️';
         
         hourElement.innerHTML = `
             <div class="hourly-time">${time}</div>
-            <img src="${iconUrl}" alt="${period.weather[0].description}" class="hourly-icon">
+            <div class="hourly-icon">${weatherEmoji}</div>
             <div class="hourly-temp">${Math.round(period.main.temp)}°</div>
         `;
         
