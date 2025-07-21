@@ -112,7 +112,64 @@
             gap: 8px;
             font-size: 0.8rem;
         }
-        
+
+.hourly-forecast {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.hourly-forecast-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+       .hourly-forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.hourly-item {
+    text-align: center;
+    padding: 8px 4px;
+    background: rgba(37, 99, 235, 0.08);
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.hourly-time {
+    font-size: 0.7rem;
+    color: #666;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.hourly-icon {
+    width: 20px;
+    height: 20px;
+    margin: 2px auto 4px;
+    display: block;
+}
+
+.hourly-temp {
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #2563eb;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .hourly-forecast-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .hourly-item {
+        padding: 6px 3px;
+    }
+}
         .forecast-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -141,7 +198,7 @@
             font-size: 0.9rem;
             color: #2563eb;
         }
-        
+
         .surf-current {
             display: flex;
             align-items: center;
@@ -339,15 +396,15 @@
             <div id="weather-content">
                 <div class="loading">Loading weather data...</div>
             </div>
-            
-            <!-- Add hourly forecast here -->
+    
+    <!-- Updated hourly forecast with grid layout -->
             <div class="hourly-forecast">
-                <div class="hourly-forecast-title">Next 12 Hours</div>
+                <h3 class="hourly-forecast-title">Next 12 Hours</h3>
                 <div class="hourly-forecast-grid">
-                    <!-- Cards will be populated by JavaScript -->
+            <!-- Cards will be populated by JavaScript -->
                 </div>
-            </div>
         </div>
+    </div>
         
         <div class="card">
             <h2>📈 7-Day Forecast</h2>
