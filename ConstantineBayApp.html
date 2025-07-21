@@ -453,35 +453,7 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Improved responsive design */
-        @media (max-width: 480px) {
-            .weather-current {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 8px;
-            }
-            
-            .weather-icon {
-                grid-row: 1;
-                grid-column: 1;
-            }
-            
-            .temperature, .description, .feels-like {
-                grid-column: 1;
-            }
-            
-            .surf-current {
-                flex-direction: column;
-                text-align: center;
-                gap: 12px;
-            }
-            
-            .weather-details, .surf-details {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-        }
+        
     </style>
 </head>
 <body>
