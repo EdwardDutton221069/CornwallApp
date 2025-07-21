@@ -339,8 +339,16 @@
             <div id="weather-content">
                 <div class="loading">Loading weather data...</div>
             </div>
+            
+            <!-- Add hourly forecast here -->
+            <div class="hourly-forecast">
+                <div class="hourly-forecast-title">Next 12 Hours</div>
+                <div class="hourly-forecast-grid">
+                    <!-- Cards will be populated by JavaScript -->
+                </div>
+            </div>
         </div>
-
+        
         <div class="card">
             <h2>📈 7-Day Forecast</h2>
             <div id="forecast-content">
@@ -360,6 +368,8 @@
                 <div class="loading">Loading tide data...</div>
             </div>
         </div>
+    </div>
+</body>
         
         <button class="refresh-btn" onclick="loadAllData()">
             🔄 Refresh Data
@@ -647,55 +657,90 @@
             }
         }
         
-        // Load forecast data
-        async function loadForecastData() {
-            if (!API_KEYS.weather) {
-                return;
+       // Load forecast data
+async function loadForecastData() {
+    if (!API_KEYS.weather) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${LOCATIONS.constantineBay.lat}&lon=${LOCATIONS.constantineBay.lon}&appid=${API_KEYS.weather}&units=metric`
+        );
+        const data = await response.json();
+        
+        // Handle hourly forecast (next 12 hours - 4 periods of 3-hour intervals)
+        displayHourlyForecast(data.list.slice(0, 4));
+        
+        // Handle daily forecast (existing code)
+        const dailyData = {};
+        data.list.forEach(item => {
+            const date = new Date(item.dt * 1000).toDateString();
+            if (!dailyData[date]) {
+                dailyData[date] = {
+                    temps: [],
+                    icon: item.weather[0].icon,
+                    date: new Date(item.dt * 1000)
+                };
             }
+            dailyData[date].temps.push(item.main.temp);
+        });
+        
+        const forecastHTML = Object.values(dailyData).slice(0, 7).map(day => {
+            const minTemp = Math.round(Math.min(...day.temps));
+            const maxTemp = Math.round(Math.max(...day.temps));
+            const icon = weatherIcons[day.icon] || '🌤️';
+            const dayName = day.date.toLocaleDateString('en-GB', { weekday: 'short' });
             
-            try {
-                const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/forecast?lat=${LOCATIONS.constantineBay.lat}&lon=${LOCATIONS.constantineBay.lon}&appid=${API_KEYS.weather}&units=metric`
-                );
-                const data = await response.json();
-                
-                const dailyData = {};
-                data.list.forEach(item => {
-                    const date = new Date(item.dt * 1000).toDateString();
-                    if (!dailyData[date]) {
-                        dailyData[date] = {
-                            temps: [],
-                            icon: item.weather[0].icon,
-                            date: new Date(item.dt * 1000)
-                        };
-                    }
-                    dailyData[date].temps.push(item.main.temp);
-                });
-                
-                const forecastHTML = Object.values(dailyData).slice(0, 7).map(day => {
-                    const minTemp = Math.round(Math.min(...day.temps));
-                    const maxTemp = Math.round(Math.max(...day.temps));
-                    const icon = weatherIcons[day.icon] || '🌤️';
-                    const dayName = day.date.toLocaleDateString('en-GB', { weekday: 'short' });
-                    
-                    return `
-                        <div class="forecast-item">
-                            <div class="forecast-day">${dayName}</div>
-                            <div class="forecast-icon">${icon}</div>
-                            <div class="forecast-temp">${maxTemp}°/${minTemp}°</div>
-                        </div>
-                    `;
-                }).join('');
-                
-                document.getElementById('forecast-content').innerHTML = `
-                    <div class="forecast-grid">${forecastHTML}</div>
-                `;
-            } catch (error) {
-                document.getElementById('forecast-content').innerHTML = `
-                    <div class="error">Error loading forecast data</div>
-                `;
-            }
-        }
+            return `
+                <div class="forecast-item">
+                    <div class="forecast-day">${dayName}</div>
+                    <div class="forecast-icon">${icon}</div>
+                    <div class="forecast-temp">${maxTemp}°/${minTemp}°</div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById('forecast-content').innerHTML = `
+            <div class="forecast-grid">${forecastHTML}</div>
+        `;
+    } catch (error) {
+        document.getElementById('forecast-content').innerHTML = `
+            <div class="error">Error loading forecast data</div>
+        `;
+    }
+}
+
+// Add the hourly forecast display function
+function displayHourlyForecast(hourlyData) {
+    const container = document.querySelector('.hourly-forecast-grid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    hourlyData.forEach(period => {
+        const hourElement = document.createElement('div');
+        hourElement.className = 'hourly-item';
+        
+        // Format time
+        const time = new Date(period.dt * 1000).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            hour12: true
+        });
+        
+        // Get weather icon
+        const iconCode = period.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+        
+        hourElement.innerHTML = `
+            <div class="hourly-time">${time}</div>
+            <img src="${iconUrl}" alt="${period.weather[0].description}" class="hourly-icon">
+            <div class="hourly-temp">${Math.round(period.main.temp)}°</div>
+        `;
+        
+        container.appendChild(hourElement);
+    });
+}
         
         // Load tide data
         async function loadTideData() {
