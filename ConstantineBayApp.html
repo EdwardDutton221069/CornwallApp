@@ -261,15 +261,16 @@
         
         .surf-forecast-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
         
         .surf-forecast-item {
-            text-align: center;
-            padding: 12px 8px;
-            background: rgba(8, 145, 178, 0.1);
+     text-align: center;
+            padding: 10px 8px;
+            background: rgba(37, 99, 235, 0.08);
             border-radius: 12px;
+            font-size: 0.75rem;
             transition: all 0.2s ease;
         }
         
@@ -281,15 +282,14 @@
         .surf-forecast-time {
             font-weight: 600;
             margin-bottom: 6px;
-            font-size: 0.75rem;
-            color: #0891b2;
+            font-size: 0.8rem;
+            color: #374151;
         }
         
         .surf-forecast-wave {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: #374151;
+            font-size: 0.875rem;
+            color: #2563eb;
+            font-weight: 600;
         }
         
         .surf-forecast-condition {
@@ -468,7 +468,7 @@
             </div>
             
             <div class="hourly-forecast">
-                <h3 class="hourly-forecast-title">Next 12 Hours</h3>
+                <h3 class="hourly-forecast-title">🌡️ Next 12 Hours</h3>
                 <div class="hourly-forecast-grid">
                     <!-- Cards will be populated by JavaScript -->
                 </div>
